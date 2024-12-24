@@ -1,31 +1,40 @@
-// app/page.ts
-"use client";
-
+import './App.css';
+import { Authenticator } from '@aws-amplify/ui-react';
+import {
+  createAmplifyAuthAdapter,
+  createStorageBrowser,
+} from '@aws-amplify/ui-react-storage/browser';
+import "@aws-amplify/ui-react-storage/styles.css";
+import config from '../amplify_outputs.json';
 import { Amplify } from "aws-amplify";
-import outputs from "../amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
-import "@aws-amplify/ui-react-storage/storage-browser-styles.css";
 
-Amplify.configure(outputs);
+Amplify.configure(config);
 
-import { StorageBrowser } from "@aws-amplify/ui-react-storage";
-import { Authenticator, Button } from "@aws-amplify/ui-react";
-
+// these should match access patterns defined in amplify/storage/resource.ts
 const defaultPrefixes = [
-  "public/",
+  'publci/',
   (identityId: string) => `protected/${identityId}/`,
   (identityId: string) => `private/${identityId}/`,
 ];
 
-export default function App() {
+const { StorageBrowser } = createStorageBrowser({
+  config: createAmplifyAuthAdapter(),
+});
+
+
+function App() {
+
   return (
     <Authenticator>
-      {({ signOut }) => (
-        <>
-          <Button onClick={signOut}>Sign Out</Button>
-          <StorageBrowser defaultPrefixes={defaultPrefixes} />
-        </>
+      {({ signOut, user }) => (
+        <main>
+          <h1>MeetingAI-Upload-Bucket</h1>
+          <StorageBrowser/>
+          <button onClick={signOut}>Sign out</button>
+        </main>
       )}
     </Authenticator>
-  );
+  )
 }
+
+export default App

@@ -2,7 +2,7 @@
 import { defineStorage } from "@aws-amplify/backend";
 
 export const storage = defineStorage({
-  name: "myProjectFiles",
+  name: "test-storage-browser-20241224",
   access: (allow) => ({
     "public/*": [
       allow.guest.to(["read"]),
